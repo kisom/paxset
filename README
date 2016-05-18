@@ -1,0 +1,67 @@
+paxset
+======
+
+This a tool written to assist in maintaining a grsec system on Debian
+testing[1]. The paxrat[2] and paxd[3] utilities were found to be unusable:
+paxd wouldn't work at all (it needed to be run as root, and it wasn't
+set up by default to do this), and paxrat left my system in an unusable
+state. These tools probably work for other people, and I'm grateful
+to have those programs as examples and inspiration. Your mileage will
+likely vary.
+
+I wrote this to fulfill a few goals:
+
+	1. Flags were applied consistently to a set of programs on
+	   system start.
+	2. Flags would be applied even after a program was upgraded.
+	3. The configuration file could be updated and the daemon would
+	   reload the config file.
+	4. The configuration file could be written in a sane manner.
+	5. Use the existing paxctl(1) program to handle the mechanics
+	   of actually setting flags on a program.
+
+I chose to write a new utility because this is a simple enough task to do
+the way I thought it should be done; I might have been able to patch
+the others to fix them, but this lets do this my way (and avoid JSON!)
+Note that paxset uses inotify(7) to watch the files listed in the config
+and the config file itself, and cheats by shelling out to paxctl(1). If
+the config file changes, it will be reloaded and the flags immediately
+applied.
+
+[2] https://github.com/subgraph/paxrat
+[3] https://github.com/thestinger/paxd/
+
+
+Configuration
+-------------
+
+paxset looks for the file /etc/paxset.conf, which follows the following
+dumb grammar (noting that all lines are trimmed of leading and trailing
+whitespace):
+
+	+ empty lines are skipped
+	+ lines beginning with '#' are skipped
+	+ a flag set is specified by "path\tflags" (yes, this is a tab
+	  separated file)
+
+The file "paxset.conf.example" is provided as an example.
+
+
+Installation
+------------
+
+Copy the example paxset.conf.example to paxset.conf and edit it
+appropriately. Run "make" to build the program (or just run go build). Run
+"make install" as root to copy the files over and install the systemd
+service.
+
+
+Standalone mode
+---------------
+
+This can be run without systemd: run "go build" or "make" to build the "paxset"
+binary, then run "paxset -c /path/to/config" to do apply the flags in one shot,
+or "paxset -c /path/to/config -w" to run a foreground inotify(7) watcher. If
+the config file is in the default /etc/paxset.conf location, the "-c" flag and
+argument may be omitted.
+

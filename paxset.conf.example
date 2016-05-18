@@ -1,0 +1,28 @@
+## default paxset configuration for a minimal Debian grsec setup.
+
+# system shells
+/bin/zsh	m
+/bin/bash	m
+/bin/dash	m
+
+# system tools
+/usr/sbin/cron	m
+/usr/bin/xterm	m
+
+# required for my user session
+/usr/local/bin/stumpwm	m
+/usr/bin/ssh-askpass	m
+/usr/local/bin/xscreensaver	m
+/usr/local/bin/fzf	m
+
+# browsers
+/usr/bin/firefox-esr	m
+/opt/google/chrome/chrome	m
+/opt/google/chrome/chrome-sandbox	m
+/usr/lib/chromium/chromium	m
+/usr/lib/chromium/chrome-sandbox	m
+/usr/bin/lynx	m
+
+# miscellaneous
+/usr/share/spotify/spotify	m
+

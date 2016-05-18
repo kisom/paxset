@@ -1,0 +1,23 @@
+# systemd unit for paxtest
+
+[Unit]
+Description='Maintain PaX flags across system upgrades.'
+After=multi-user.target
+
+[Exec]
+User=root
+Group=daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/paxset -w
+User=root
+Group=daemon
+SyslogIdentifier=paxset
+StandardOutput=syslog
+StandardError=inherit
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
